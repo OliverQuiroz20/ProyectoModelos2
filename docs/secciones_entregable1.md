@@ -203,7 +203,8 @@ negativos, una razón de 1 a 1,74. Es un desbalance moderado. Se compararán la
 ponderación de clases, el submuestreo de la clase mayoritaria y el sobremuestreo con
 SMOTE, aplicados únicamente dentro de los pliegues de entrenamiento para no
 contaminar la validación. Los modelos se evaluarán con AUC, G-mean, exactitud
-balanceada, KS y Brier score, en línea con las métricas del estado del arte.
+balanceada y el coeficiente de correlación de Matthews (MCC), que no se inflan con la
+clase mayoritaria.
 
 ---
 

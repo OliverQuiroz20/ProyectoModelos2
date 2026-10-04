@@ -9,6 +9,7 @@
 \usepackage{tabularx}
 \usepackage{amsmath}
 \usepackage{url}
+\usepackage{float}
 
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 
@@ -214,14 +215,14 @@ Atraso de cuotas nunca pagadas & Episodio cerrado o activo al corte & No se impu
 \end{tabularx}
 \end{table*}
 
-\textbf{Balance de clases.} La población tiene 1.070 episodios positivos (36,5~\%) y 1.863 negativos, una razón de 1 a 1,74. Es un desbalance moderado. Se compararán la ponderación de clases, el submuestreo de la clase mayoritaria y el sobremuestreo con SMOTE, aplicados únicamente dentro de los pliegues de entrenamiento para no contaminar la validación. Los modelos se evaluarán con AUC, G-mean, exactitud balanceada, KS y Brier score, en línea con las métricas del estado del arte.
+\textbf{Balance de clases.} La población tiene 1.070 episodios positivos (36,5~\%) y 1.863 negativos, una razón de 1 a 1,74. Es un desbalance moderado. Se compararán la ponderación de clases, el submuestreo de la clase mayoritaria y el sobremuestreo con SMOTE, aplicados únicamente dentro de los pliegues de entrenamiento para no contaminar la validación. Los modelos se evaluarán con AUC, G-mean, exactitud balanceada y el coeficiente de correlación de Matthews (MCC), que no se inflan con la clase mayoritaria.
 
 % ---------------------------------------------------------------------
 \subsection{Paradigmas de aprendizaje}
 
 El sistema se organiza en dos etapas encadenadas, descritas en la Tabla~\ref{tab:etapas}.
 
-\begin{table}[!t]
+\begin{table}[H]
 \caption{Etapas del sistema}
 \label{tab:etapas}
 \centering
@@ -245,12 +246,12 @@ Consideración de diseño sobre fuga de información: para que el perfil sea vá
 
 La predicción de la mora a partir del comportamiento de pago de clientes que ya tienen un crédito se conoce como calificación por comportamiento (\emph{behavioural scoring}). La literatura la aborda principalmente como un problema de clasificación binaria supervisada, que estima la probabilidad de que un cliente incumpla dentro de un horizonte definido [1]--[4]. Dos de los trabajos revisados añaden una etapa no supervisada previa, que agrupa a los clientes según su comportamiento y usa ese grupo como entrada del clasificador [1], [2]. Es la misma arquitectura en dos etapas que adopta este proyecto. La Tabla~\ref{tab:estado} resume los cuatro trabajos.
 
-\begin{table*}[!t]
+\begin{table}[H]
 \caption{Resumen de los trabajos revisados}
 \label{tab:estado}
 \centering
-\small
-\begin{tabularx}{\textwidth}{@{}lLLL@{}}
+\footnotesize
+\begin{tabularx}{\columnwidth}{@{}p{0.07\columnwidth}LLL@{}}
 \toprule
 Ref. & Paradigma y técnica & Validación & Resultado principal \\
 \midrule
@@ -260,7 +261,7 @@ Ref. & Paradigma y técnica & Validación & Resultado principal \\
 {[4]} & Supervisado: LSTM bidireccional frente a 5 modelos & VC de 5 pliegues y McNemar & AUC 78,5~\% (gradient boosting: 78,0~\%) \\
 \bottomrule
 \end{tabularx}
-\end{table*}
+\end{table}
 
 \subsection{Paradigmas, técnicas y validación}
 
