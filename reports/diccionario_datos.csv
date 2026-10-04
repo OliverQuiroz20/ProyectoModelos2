@@ -1,0 +1,31 @@
+﻿tabla,columna,tipo,significado,% faltantes,rango o categorías
+abonos,id_contrato,str,Código anónimo del contrato (identifica la moto; se reasigna entre clientes),0.0,"3,906 códigos"
+abonos,fecha,datetime64[us],Fecha del registro de pago,0.0,2020-02-09 a 2026-10-03
+abonos,abono,float64,Pago al canon (reduce el saldo de la moto),0.0,"-300.00 a 18,304.00"
+abonos,transf,float64,Pago al canon por transferencia (reduce el saldo; poco común),0.0,"0.00 a 15,268.50"
+abonos,multa,float64,Multa por atraso cobrada en el pago (no reduce el saldo),0.0,0.00 a 499.80
+abonos,repuesto,float64,"Devolución de dinero prestado (repuestos, trámites, SOAT); no reduce el saldo",0.0,"0.00 a 1,321.00"
+abonos,carta,str,SI = abono ficticio que cierra el saldo (la moto deja de estar con el cliente),0.0,"NO, SI"
+abonos,cartamotivo,str,"Motivo de la carta (regreso diario, administración, realquiler, pérdida, pronto pago...)",81.4,"NADA, CARTA REGRESO DIARIO, CARTA ADMINISTRACION, PRONTO PAGO, CARTA REALQUILER, CARTA PERDIDA (+1)"
+abonos,concepto,str,"Canal o tipo de registro (EFECTIVO, DIGITACION, EGRESOS...)",0.0,"EFECTIVO, DIGITACION, RENTAYA"
+abonos,empresa,str,"Empresa del grupo (MOTOHOY, RENTAYA)",0.0,"MOTOHOY, RENTAYA"
+motos_diario,id_contrato,str,Código anónimo del contrato,0.0,"3,081 códigos"
+motos_diario,fecha_registro,datetime64[us],Día de la foto diaria,0.0,2024-03-30 a 2026-10-04
+motos_diario,fecha_inicio,str,Inicio del episodio (cliente con la moto); 0000-00-00 = trámites pendientes,0.0,"0000-00-00, 2024-06-06, 2025-07-15, 2024-06-01, 2025-08-13, 2025-08-30 (+1014)"
+motos_diario,tipopago,str,"Frecuencia de pago: SEMANAL, QUINCENAL, MENSAUAL o DIARIO (período de prueba)",0.0,"SEMANAL, DIARIO, QUINCENAL, MENSAUAL"
+motos_diario,dia_canon,str,Día de la semana en que vence la cuota (QUI = quincenal),9.2,"Mar, Mier, Jue, QUI, MAR, jue (+6)"
+motos_diario,cuota,float64,Valor de la cuota por ciclo,0.3,"0.00 a 2,220.00"
+motos_diario,no_canon,int64,Número de cuotas pactadas,0.0,0.00 a 96.00
+motos_diario,diassinpagar,int64,Días desde el último pago según el sistema (999 = sin pagos aún),0.0,0.00 a 999.00
+motos_diario,justificacion,str,Justificación o marca de gestión vigente ese día,98.3,"Multa, MOTO INGRESADA, Problema, Nuevo, Prestamo, Varado (+14)"
+motos_diario,empresa,str,Empresa del grupo,0.0,"MOTOHOY, RENTAYA"
+rentabilidad,id_contrato,str,Código anónimo del contrato,0.0,"2,374 códigos"
+rentabilidad,concepto,str,"Desenlace del episodio cerrado (NORMAL, PRONTO PAGO o tipo de carta)",0.0,"NORMAL, CARTA REGRESO DIARIO, CARTA ADMINISTRACION, PRONTO PAGO, CARTA REALQUILER, CARTA PERDIDA"
+rentabilidad,fecha_inicio,datetime64[us],Inicio del episodio,0.0,2021-03-24 a 2026-09-01
+rentabilidad,fecha_final,datetime64[us],Fin del episodio,0.0,2022-09-29 a 2026-10-01
+rentabilidad,fecha_registro,datetime64[us],Fecha en que se registró el cierre,0.0,2023-09-01 a 2026-10-03
+rentabilidad,tipopago,str,Frecuencia de pago,0.0,"SEMANAL, QUINCENAL, MENSAUAL"
+rentabilidad,dia_canon,str,Día de vencimiento de la cuota,0.0,"Mar, Jue, Mier, QUI, MES, jue (+3)"
+rentabilidad,cuota,float64,Valor de la cuota,0.0,"-9,376.71 a 639.00"
+rentabilidad,no_canon,int64,Número de cuotas pactadas,0.0,0.00 a 96.00
+rentabilidad,fuente,str,Tabla de origen (rentabilidad_activos o rentabilidad_activos_cartas),0.0,"rentabilidad_activos, rentabilidad_activos_cartas"

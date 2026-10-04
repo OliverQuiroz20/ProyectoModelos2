@@ -1,0 +1,88 @@
+{
+  "base": {
+    "registros de pago (filas de abonos)": 214745,
+    "días con pago real (contrato-día)": 211593,
+    "contratos (motos) distintos": 3906,
+    "rango de fechas de pago": "2020-02-09 a 2026-10-03",
+    "filas con carta": 2546,
+    "contratos con carta de retiro": 1231
+  },
+  "episodios": {
+    "episodios de leasing (todos)": 5316,
+    "episodios desde la cohorte": 4506,
+    "semanal": 4371,
+    "quincenal": 135,
+    "motohoy": 3102,
+    "rentaya": 1404,
+    "con retiro (desde la cohorte)": 1825,
+    "ciclos de pago esperados (todos)": 178526
+  },
+  "justificaciones": {
+    "cliente problema": 803,
+    "enfermedad o calamidad": 280,
+    "inmovilización": 748,
+    "no es justificación": 3643,
+    "retención temporal (MOTO INGRESADA)": 1174
+  },
+  "multa": {
+    "spearman_multa_atraso": 0.608,
+    "sin_multa_0": 96.2,
+    "sin_multa_1-2": 16.9,
+    "sin_multa_3-6": 8.9,
+    "sin_multa_7-13": 39.5,
+    "sin_multa_14+": 38.0
+  },
+  "atraso_ciclo_percentiles": {
+    "0.5": 1.0,
+    "0.75": 8.0,
+    "0.9": 31.0,
+    "0.95": 58.0,
+    "0.99": 162.0
+  },
+  "retiro_por_atraso_max": {
+    "0": 16.5,
+    "1-2": 12.9,
+    "3-6": 28.1,
+    "7-13": 47.2,
+    "14-20": 66.5,
+    "21-29": 66.3,
+    "30-59": 70.4,
+    "60+": 72.2
+  },
+  "embudo": {
+    "EN LA POBLACIÓN": 2933,
+    "cerrado antes de la semana k": 994,
+    "inicio antes de la cohorte": 810,
+    "sin desenlace observable aun": 336,
+    "error de asignacion (<= 1 semana sin pagos)": 225,
+    "sin dia_canon": 18
+  },
+  "etiqueta": {
+    "poblacion": 2933,
+    "positivos": 1070,
+    "pct_positivos": 36.5,
+    "positivos_por_atraso": 766,
+    "positivos_solo_nunca_pagado": 304,
+    "de_esos_con_carta": 260,
+    "razon_negativos_positivos": 1.74
+  },
+  "redundancia": {
+    "prop_pagos_con_multa~prop_ciclos_atrasados": 0.841,
+    "multa_acumulada~atraso_promedio": 0.611,
+    "pagos_por_ciclo~dias_con_pago": 0.985,
+    "atraso_maximo~atraso_promedio": 0.974,
+    "deficit_relativo~ciclos_sin_pagar_k": 0.798
+  },
+  "faltantes": {
+    "dias_hasta_primer_pago": 126,
+    "cv_pago_canon": 136,
+    "prop_pagos_con_multa": 126
+  },
+  "parametros": {
+    "K": 8,
+    "H": 12,
+    "X": 14,
+    "inicio_cohorte": "2024-03-30",
+    "corte": "2026-10-03"
+  }
+}

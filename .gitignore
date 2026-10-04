@@ -1,0 +1,17 @@
+# Credenciales
+.env
+
+# Datos de la empresa (confidenciales): nunca al repo
+data/raw/
+
+# Python / Jupyter
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+
+# Copia anonimizada: se comparte por canal privado, no por el repo
+data/anon/
+
+# Paquete para Overleaf (se genera desde informe/)
+*.zip
+entregable1_overleaf/
