@@ -12,9 +12,26 @@ variables y el perfil de la etapa 1 (aprendizaje supervisado).
 Este repositorio contiene el **Entregable I**: análisis exploratorio de la base real,
 definición de la variable objetivo y construcción de las variables candidatas.
 
+## Notebook en Colab
+
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1t-ZZkSDWVyzutK3hZLlpr1nYyDcDGiS9)
+
+Enlace directo: <https://colab.research.google.com/drive/1t-ZZkSDWVyzutK3hZLlpr1nYyDcDGiS9>
+
+El enlace abre la versión del notebook que está en la carpeta compartida de Drive, junto
+con los datos. Solo funciona para las cuentas con acceso a esa carpeta, porque los datos
+son confidenciales; para ejecutarlo se usa Entorno de ejecución → Ejecutar todas.
+
+## Reporte
+
+El documento del Entregable I está en
+[`informe/Primera_Entrega_ModelosII.pdf`](informe/Primera_Entrega_ModelosII.pdf). Su
+fuente LaTeX (plantilla IEEEtran) y sus figuras están en `informe/`.
+
 ## Estructura
 
 ```
+informe/                     reporte en PDF, fuente LaTeX y figuras
 notebooks/01_eda.ipynb       análisis exploratorio completo (ejecutado, con resultados)
 src/ciclos.py                episodios y calendario de pagos esperado
 src/variables.py             población, etiqueta y variables con corte temporal
@@ -61,10 +78,14 @@ python -m pytest -q             # pruebas (no necesitan los datos reales)
 jupyter nbconvert --to notebook --execute --inplace notebooks/01_eda.ipynb
 ```
 
-**En Google Colab:** subir a la sesión (panel Archivos), todos en la misma carpeta,
-el notebook, `src/ciclos.py`, `src/variables.py` y los tres archivos de `data/anon/`.
-El notebook detecta esa estructura sola. Los resultados quedan en `reports/` dentro de
-la sesión y se borran al cerrarla, así que hay que descargarlos.
+**En Google Colab:** el equipo comparte por Drive (acceso restringido) la carpeta
+`ProyectoModelos2_Colab`, con el notebook, `ciclos.py`, `variables.py` y los tres
+archivos de `data/anon/`. Quien la recibe le agrega un acceso directo en "Mi unidad"
+(clic derecho → Organizar → Agregar acceso directo), abre `01_eda.ipynb` con Colab y
+ejecuta todo. El notebook conecta Drive y entra a la carpeta solo, y guarda los
+resultados en la sesión (`/content/salidas`), así que funciona con acceso de solo
+lectura. Esos resultados se borran al cerrar la sesión; hay que descargarlos si se
+necesitan.
 
 El notebook tarda alrededor de dos minutos. Sus parámetros (`K`, `H`, `X` e inicio de
 la cohorte) están en la sección 1 y todo se recalcula al cambiarlos. Genera en
@@ -84,5 +105,3 @@ clave (`cifras_eda.json`) y las figuras del documento.
   semanas.
 
 El detalle y la justificación de cada regla están en `docs/reglas_de_negocio.md`.
-
-El reporte final se redacta aparte en Overleaf, con la plantilla IEEE Transactions.
