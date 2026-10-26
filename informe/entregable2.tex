@@ -4,7 +4,10 @@
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-noquoting,es-nodecimaldot]{babel}
 \usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
 \usepackage{url}
+\usepackage{float}
 
 \begin{document}
 
@@ -19,7 +22,7 @@
 % =====================================================================
 \section{Introducción}
 
-Este documento presenta el desarrollo del modelo en dos etapas descrito en el Entregable I: una primera etapa no supervisada que identifica perfiles de comportamiento de pago y una segunda etapa supervisada que estima la probabilidad de que un contrato de leasing de motocicletas termine en riesgo grave de mora. Atiende además la retroalimentación recibida sobre el primer entregable, que pedía validar de forma temporal y no aleatoria, evitar la fuga de información entre las etapas, justificar la etiqueta con un criterio de negocio, analizar la sensibilidad de los parámetros de ventana y reportar más métricas por clase. El detalle de las variables, las tablas completas y las figuras se encuentra en los cuadernos de código que acompañan al informe (cuadernos 01 a 05); aquí se resume el razonamiento y los resultados principales.
+Este documento presenta el desarrollo del modelo en dos etapas descrito en el Entregable I: una primera etapa no supervisada que identifica perfiles de comportamiento de pago y una segunda etapa supervisada que estima la probabilidad de que un contrato de leasing de motocicletas termine en riesgo grave de mora. Atiende además la retroalimentación recibida sobre el primer entregable, que pedía validar de forma temporal y no aleatoria, evitar la fuga de información entre las etapas, justificar la etiqueta con un criterio de negocio, analizar la sensibilidad de los parámetros de ventana y reportar más métricas por clase. El detalle completo de las variables y de cada experimento se encuentra en los cuadernos de código que acompañan al informe (cuadernos 01 a 05); aquí se resume el razonamiento y se muestran los resultados principales.
 
 % =====================================================================
 \section{Estado del arte}
@@ -59,31 +62,101 @@ Para evitar la fuga de información entre las etapas, la imputación, el escalam
 
 \subsection{Etapa 1: perfiles de comportamiento de pago}
 
-El agrupamiento se hace con k-means sobre las variables de comportamiento de las primeras ocho semanas, sin usar la etiqueta. Se eligen cuatro perfiles por estabilidad: la estabilidad del agrupamiento, medida con el índice de Rand ajustado, es de 0,81 con cuatro perfiles y baja a 0,57 con cinco. Los métodos jerárquico y de mezclas gaussianas coinciden solo en parte con k-means (índice de 0,65 a 0,70), por lo que se conserva k-means por su simplicidad. Aunque la morosidad no interviene, los perfiles se ordenan por riesgo: en entrenamiento el porcentaje de episodios positivos es de 15, 29, 59 y 81~\% desde el perfil más puntual hasta el más atrasado, y en la prueba es de 19, 37, 74 y 73~\%, con solo 15 episodios en el último perfil de prueba. Este resultado indica que los perfiles son interpretables y tienen sentido de negocio, algo que ya apuntaba el trabajo de Bakoben et al. \cite{bakoben2020}.
+El agrupamiento se hace con k-means sobre las variables de comportamiento de las primeras ocho semanas, sin usar la etiqueta. Se eligen cuatro perfiles por estabilidad: la estabilidad del agrupamiento, medida con el índice de Rand ajustado, es de 0,81 con cuatro perfiles y baja a 0,57 con cinco. Los métodos jerárquico y de mezclas gaussianas coinciden solo en parte con k-means (índice de 0,65 a 0,70), por lo que se conserva k-means por su simplicidad. Aunque la morosidad no interviene, los perfiles se ordenan por riesgo: en entrenamiento el porcentaje de episodios positivos es de 15, 29, 59 y 81~\% desde el perfil más puntual hasta el más atrasado, y en la prueba es de 19, 37, 74 y 73~\%, con solo 15 episodios en el último perfil de prueba. Este resultado indica que los perfiles son interpretables y tienen sentido de negocio, algo que ya apuntaba el trabajo de Bakoben et al. \cite{bakoben2020}. La Fig.~\ref{fig:perfiles} muestra el porcentaje de episodios con riesgo grave en cada perfil, tanto en el entrenamiento como en la prueba más reciente.
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figuras/riesgo_por_perfil.png}
+\caption{Porcentaje de episodios con riesgo grave en cada uno de los cuatro perfiles de pago, en entrenamiento y en la prueba más reciente.}
+\label{fig:perfiles}
+\end{figure}
+
 
 \subsection{Etapa 2: clasificación}
 
-Se comparan seis clasificadores del curso: regresión logística, vecinos más cercanos, árbol de decisión, random forest, gradient boosting y máquina de vectores de soporte con núcleo gaussiano. El AUC de validación y de prueba es, respectivamente, de 0,805 y 0,756 para la regresión logística, de 0,798 y 0,784 para random forest, de 0,784 y 0,783 para gradient boosting, de 0,782 y 0,701 para los vecinos más cercanos, de 0,781 y 0,722 para la máquina de vectores de soporte y de 0,741 y 0,759 para el árbol. La regresión logística y random forest no se distinguen con claridad, pues su diferencia es menor que la desviación entre pliegues, que es de unos 0,02. Se toma la regresión logística como modelo base por su interpretabilidad: en la prueba alcanza un AUC de 0,756 (intervalo de confianza del 95~\%, de 0,72 a 0,79), una exactitud balanceada de 0,69, un F1 de 0,62 para la clase de riesgo y un coeficiente de Matthews de 0,37. El valor de 0,81 que se obtenía con una partición aleatoria era optimista.
+Se comparan seis clasificadores del curso: regresión logística, vecinos más cercanos, árbol de decisión, random forest, gradient boosting y máquina de vectores de soporte con núcleo gaussiano. El AUC de validación y de prueba es, respectivamente, de 0,805 y 0,756 para la regresión logística, de 0,798 y 0,784 para random forest, de 0,784 y 0,783 para gradient boosting, de 0,782 y 0,701 para los vecinos más cercanos, de 0,781 y 0,722 para la máquina de vectores de soporte y de 0,741 y 0,759 para el árbol. La regresión logística y random forest no se distinguen con claridad, pues su diferencia es menor que la desviación entre pliegues, que es de unos 0,02. Se toma la regresión logística como modelo base por su interpretabilidad: en la prueba alcanza un AUC de 0,756 (intervalo de confianza del 95~\%, de 0,72 a 0,79), una exactitud balanceada de 0,69, un F1 de 0,62 para la clase de riesgo y un coeficiente de Matthews de 0,37. El valor de 0,81 que se obtenía con una partición aleatoria era optimista. La Tabla~\ref{tab:modelos} resume todas las métricas de los seis modelos, la Fig.~\ref{fig:comparacion} compara su AUC en validación y en prueba, y la Fig.~\ref{fig:roc} muestra la curva ROC y la matriz de confusión del modelo base en la prueba: con el umbral elegido en validación, de los 225 episodios que realmente tuvieron riesgo grave se detectan 144, y se señalan 96 de los 357 que no lo tuvieron.
+\begin{table}[!t]
+\caption{Desempeño de los seis clasificadores. Validación: media de los pliegues temporales; el resto, en la prueba.}
+\label{tab:modelos}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Modelo & AUC val. & AUC prueba & F1 (0) & F1 (1) & BACC & MCC \\
+\midrule
+Regresión logística & 0,805 & 0,756 & 0,747 & 0,619 & 0,686 & 0,367 \\
+Random forest & 0,798 & 0,784 & 0,792 & 0,623 & 0,703 & 0,421 \\
+Gradient boosting & 0,784 & 0,783 & 0,783 & 0,611 & 0,693 & 0,399 \\
+KNN & 0,782 & 0,701 & 0,767 & 0,591 & 0,676 & 0,361 \\
+SVM (RBF) & 0,781 & 0,722 & 0,775 & 0,598 & 0,683 & 0,378 \\
+Árbol de decisión & 0,741 & 0,759 & 0,797 & 0,520 & 0,657 & 0,376 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figuras/comparacion_modelos.png}
+\caption{AUC de los seis clasificadores en validación (media de los pliegues temporales y desviación) y en la prueba más reciente.}
+\label{fig:comparacion}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figuras/modelo_final.png}
+\caption{Curva ROC y matriz de confusión del modelo base (regresión logística) en la prueba.}
+\label{fig:roc}
+\end{figure}
+
 
 Dos hallazgos van en contra de lo esperado. Primero, ni el perfil de la etapa 1 ni las marcas de gestión de la empresa mejoran al clasificador, con diferencias de AUC menores a 0,004, de modo que el perfil sirve para describir la cartera, pero no agrega información a quien ya conoce las variables que lo definen. Segundo, el tratamiento del desbalance, ya sea con ponderación de clases, submuestreo o SMOTE, no cambia el AUC, lo cual es razonable con un 35~\% de positivos.
 
 \subsection{Sensibilidad a las ventanas y al umbral}
 
-Se evaluó una rejilla de 36 combinaciones de semanas de observación (4, 6, 8 y 12), de semanas de predicción (8, 12 y 16) y de días de atraso (7, 14 y 21). Con cuatro semanas de observación se predice igual o mejor que con ocho; por ejemplo, con ocho semanas de predicción y 14 días, el AUC de validación es de 0,831 frente a 0,802. Un horizonte de 16 semanas rinde peor. Con doce semanas de observación el AUC de prueba es el más alto, de 0,85, pero es engañoso, porque cambia la población y quedan unos 500 episodios. Como cada combinación define una población distinta, los valores del AUC entre filas no son estrictamente comparables, y la rejilla debe leerse como una comprobación de robustez de la elección de ocho y doce semanas y no como un criterio para elegir los parámetros.
+Se evaluó una rejilla de 36 combinaciones de semanas de observación (4, 6, 8 y 12), de semanas de predicción (8, 12 y 16) y de días de atraso (7, 14 y 21). Con cuatro semanas de observación se predice igual o mejor que con ocho; por ejemplo, con ocho semanas de predicción y 14 días, el AUC de validación es de 0,831 frente a 0,802. Un horizonte de 16 semanas rinde peor. Con doce semanas de observación el AUC de prueba es el más alto, de 0,85, pero es engañoso, porque cambia la población y quedan unos 500 episodios. Como cada combinación define una población distinta, los valores del AUC entre filas no son estrictamente comparables, y la rejilla debe leerse como una comprobación de robustez de la elección de ocho y doce semanas y no como un criterio para elegir los parámetros (Fig.~\ref{fig:rejilla}).
+
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{figuras/rejilla_khx.png}
+\caption{AUC de validación temporal para las combinaciones de semanas de observación ($K$), semanas de predicción ($H$) y días de atraso ($X$).}
+\label{fig:rejilla}
+\end{figure*}
 
 \subsection{Selección de variables y explicabilidad}
 
-Las variables más asociadas con la etiqueta, medidas por el AUC de cada una por separado, son el atraso promedio (0,759), el déficit relativo (0,749), la proporción de cuotas atrasadas (0,731) y el pago total (0,727, con signo negativo). Con solo cinco variables elegidas por información mutua, el AUC de validación es de 0,788 frente a 0,809 con todas, de manera que el modelo puede simplificarse con poca pérdida. La reducción de dimensión no ayuda: el análisis de componentes principales necesita 10 de 28 componentes para explicar el 90~\% de la varianza sin mejorar la clasificación, y el uso de UMAP como entrada empeora el AUC a 0,665. Entre pliegues se mantiene un núcleo estable de variables: la proporción de cuotas con tres o más días de atraso, las cuotas sin pagar al momento de la predicción, la variabilidad del pago y el déficit relativo. En el análisis con valores de SHAP, después de la empresa, los factores de mayor peso son el déficit relativo, el atraso promedio y la proporción de cuotas con tres o más días de atraso. Un matiz que conviene tener presente es precisamente que la empresa (MotoHoy o RentaYa) encabeza ese ranking y pesa mucho en la regresión logística, y aún falta confirmar con la empresa que este campo sea confiable y qué distingue a los clientes de RentaYa.
+Las variables más asociadas con la etiqueta, medidas por el AUC de cada una por separado, son el atraso promedio (0,759), el déficit relativo (0,749), la proporción de cuotas atrasadas (0,731) y el pago total (0,727, con signo negativo). Con solo cinco variables elegidas por información mutua, el AUC de validación es de 0,788 frente a 0,809 con todas, de manera que el modelo puede simplificarse con poca pérdida. La reducción de dimensión no ayuda: el análisis de componentes principales necesita 10 de 28 componentes para explicar el 90~\% de la varianza sin mejorar la clasificación, y el uso de UMAP como entrada empeora el AUC a 0,665. Entre pliegues se mantiene un núcleo estable de variables: la proporción de cuotas con tres o más días de atraso, las cuotas sin pagar al momento de la predicción, la variabilidad del pago y el déficit relativo. En el análisis con valores de SHAP, después de la empresa, los factores de mayor peso son el déficit relativo, el atraso promedio y la proporción de cuotas con tres o más días de atraso. Un matiz que conviene tener presente es precisamente que la empresa (MotoHoy o RentaYa) encabeza ese ranking y pesa mucho en la regresión logística, y aún falta confirmar con la empresa que este campo sea confiable y qué distingue a los clientes de RentaYa. La Fig.~\ref{fig:shap} muestra cómo cada variable empuja la predicción: valores altos de déficit relativo, de atraso promedio y de cuotas sin pagar aumentan el riesgo estimado.
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figuras/shap_resumen.png}
+\caption{Valores SHAP del random forest para la clase de riesgo grave: cada punto es un episodio, y el color indica si el valor de la variable es bajo (azul) o alto (rojo).}
+\label{fig:shap}
+\end{figure}
+
 
 \subsection{Búsqueda de un mejor modelo}
 
-Dado que seis algoritmos distintos quedan entre 0,78 y 0,80 de AUC de validación, se probaron cuatro vías para mejorar el resultado, todas con el mismo protocolo temporal. Se agregaron nueve variables de trayectoria que describen cómo termina la ventana de observación (el atraso de las últimas dos semanas, la tendencia y la desviación del atraso, el cambio entre la primera y la segunda mitad, los días desde el último pago, el mayor intervalo sin pagar y el dinero pagado en las últimas dos semanas), y los cambios de AUC quedaron dentro de la desviación entre pliegues. El ajuste de hiperparámetros con validación temporal solo subió el AUC de validación entre 0,002 y 0,005 en cada familia de modelos, con un máximo de 0,810 para la regresión logística penalizada, de 0,802 para random forest y de 0,790 para gradient boosting, y un ensamble por voto suave de regresión logística, random forest y gradient boosting llegó a 0,811 en validación y 0,788 en prueba, igual que random forest solo. Por último, se incorporaron, en modo de solo lectura, los registros de justificaciones y de gestión de cobranza anteriores a la semana 8 y se verificó con pruebas automáticas que los eventos posteriores no alteran las variables. Estas variables se asocian con la etiqueta, pero repiten lo que ya dicen los pagos y no mejoran la validación. La conclusión es que, con las primeras ocho semanas de información, el modelo está cerca de su máximo y que el límite proviene de la información de entrada y no del algoritmo.
+Dado que seis algoritmos distintos quedan entre 0,78 y 0,80 de AUC de validación, se probaron cuatro vías para mejorar el resultado, todas con el mismo protocolo temporal. Se agregaron nueve variables de trayectoria que describen cómo termina la ventana de observación (el atraso de las últimas dos semanas, la tendencia y la desviación del atraso, el cambio entre la primera y la segunda mitad, los días desde el último pago, el mayor intervalo sin pagar y el dinero pagado en las últimas dos semanas), y los cambios de AUC quedaron dentro de la desviación entre pliegues. El ajuste de hiperparámetros con validación temporal solo subió el AUC de validación entre 0,002 y 0,005 en cada familia de modelos, con un máximo de 0,810 para la regresión logística penalizada, de 0,802 para random forest y de 0,790 para gradient boosting, y un ensamble por voto suave de regresión logística, random forest y gradient boosting llegó a 0,811 en validación y 0,788 en prueba, igual que random forest solo. Por último, se incorporaron, en modo de solo lectura, los registros de justificaciones y de gestión de cobranza anteriores a la semana 8 y se verificó con pruebas automáticas que los eventos posteriores no alteran las variables. Estas variables se asocian con la etiqueta, pero repiten lo que ya dicen los pagos y no mejoran la validación. La conclusión es que, con las primeras ocho semanas de información, el modelo está cerca de su máximo y que el límite proviene de la información de entrada y no del algoritmo (Fig.~\ref{fig:busqueda}).
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figuras/busqueda_mejora.png}
+\caption{AUC de validación del modelo base y de cada intento de mejora. La franja gris marca la desviación típica entre pliegues; ninguna variante sale de ella.}
+\label{fig:busqueda}
+\end{figure}
+
 
 Una forma más cercana al uso real de medir el modelo es la precisión entre los episodios de mayor riesgo. Si la empresa revisara solo el 10~\% de los episodios de la prueba con mayor probabilidad, acertaría entre el 78~\% y el 79~\% de las veces según el modelo, frente a una tasa base de 38,7~\%, y entre el 74~\% y el 75~\% si revisara el 20~\%.
 
 \subsection{Validación externa en otras sedes}
 
-El modelo entrenado con todos los episodios de Cartagena se aplicó sin reajustarse a Sincelejo (793 episodios, 23,6~\% positivos) y Montería (199 episodios, 21,1~\% positivos), que usan la misma estructura de datos en servidores distintos y cuyo historial comienza a mediados de 2025 y a fines de ese año, respectivamente. En Sincelejo el AUC es de 0,767 con regresión logística, de 0,754 con random forest y de 0,761 con gradient boosting, y en Montería, de 0,783, 0,805 y 0,795. Son valores iguales o mayores que los de la prueba temporal de Cartagena, aunque la tasa de riesgo de las nuevas sedes es menor, y la precisión en el 10~\% de mayor riesgo es de 71 a 76~\% en Sincelejo y de 68~\% en Montería, unas tres veces la tasa base. Quitar la variable empresa cambia el AUC en menos de 0,003, porque en las sedes nuevas todos los episodios son de MotoHoy. El resultado de Montería se apoya en pocos episodios y tiene un margen de error amplio, por lo que la conclusión descansa sobre todo en Sincelejo. Como la tasa de riesgo cambia por sede, el umbral de decisión debería calibrarse para cada una.
+El modelo entrenado con todos los episodios de Cartagena se aplicó sin reajustarse a Sincelejo (793 episodios, 23,6~\% positivos) y Montería (199 episodios, 21,1~\% positivos), que usan la misma estructura de datos en servidores distintos y cuyo historial comienza a mediados de 2025 y a fines de ese año, respectivamente. En Sincelejo el AUC es de 0,767 con regresión logística, de 0,754 con random forest y de 0,761 con gradient boosting, y en Montería, de 0,783, 0,805 y 0,795. Son valores iguales o mayores que los de la prueba temporal de Cartagena, aunque la tasa de riesgo de las nuevas sedes es menor, y la precisión en el 10~\% de mayor riesgo es de 71 a 76~\% en Sincelejo y de 68~\% en Montería, unas tres veces la tasa base. Quitar la variable empresa cambia el AUC en menos de 0,003, porque en las sedes nuevas todos los episodios son de MotoHoy. El resultado de Montería se apoya en pocos episodios y tiene un margen de error amplio, por lo que la conclusión descansa sobre todo en Sincelejo. Como la tasa de riesgo cambia por sede, el umbral de decisión debería calibrarse para cada una (Fig.~\ref{fig:sedes}).
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figuras/validacion_sedes.png}
+\caption{AUC de los tres mejores modelos, entrenados con Cartagena, al aplicarlos sin reajustar a Sincelejo y Montería, junto al AUC de la prueba temporal de Cartagena.}
+\label{fig:sedes}
+\end{figure}
+
 
 % =====================================================================
 \section{Limitaciones y conclusiones}
