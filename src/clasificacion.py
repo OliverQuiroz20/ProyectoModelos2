@@ -67,6 +67,13 @@ class Preprocesador(BaseEstimator, TransformerMixin):
             partes.append(self.perfil_.transform(X))
         return np.hstack(partes)
 
+    def get_feature_names_out(self, input_features=None):
+        nombres = list(self.pipe_num_.named_steps["imp"].get_feature_names_out(self.num_))
+        nombres += list(self.ohe_.get_feature_names_out(CAT))
+        if self.perfil_ is not None:
+            nombres += [f"perfil_{i}" for i in range(self.k_perfil)]
+        return np.array(nombres)
+
 
 def modelos(seed=0, peso_clases=True):
     """Modelos del curso. `peso_clases` aplica ponderacion de clases cuando el modelo la admite."""
