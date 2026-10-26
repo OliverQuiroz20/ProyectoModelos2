@@ -1,25 +1,25 @@
 ﻿,descripción,% faltantes,mediana,media y=0,media y=1,Spearman con y
-ciclos_esperados,Cuotas que vencieron en la ventana,0.0,8.0,7.94,7.97,0.035
-prop_ciclos_atrasados,Proporción de ciclos con atraso >= 1 día,0.0,0.25,0.23,0.52,0.43
-prop_ciclos_atraso_3mas,Proporción de ciclos con atraso >= 3 días,0.0,0.0,0.07,0.3,0.46
-atraso_promedio,Días de atraso promedio por ciclo,0.0,0.38,0.8,4.82,0.473
-atraso_maximo,Máximo atraso de un ciclo,0.0,1.0,2.12,10.86,0.478
-ciclos_sin_pagar_k,Ciclos vencidos sin pagar en t_k,0.0,0.0,0.29,1.74,0.47
-dias_con_pago,Días con algún pago,0.0,8.0,7.69,6.24,-0.437
-dias_hasta_primer_pago,Días entre el inicio y el primer pago,4.3,5.0,5.04,5.36,0.028
-pago_canon_total,Abono + transferencia acumulados,0.0,1575.0,1573.88,1257.59,-0.392
-cv_pago_canon,Coeficiente de variación del pago al canon,4.6,0.13,0.14,0.18,0.146
-multa_acumulada,Multa acumulada,0.0,15.0,27.33,47.97,0.233
-prop_pagos_con_multa,Proporción de pagos con multa,4.3,0.12,0.18,0.34,0.303
-repuesto_acumulado,Dinero devuelto por préstamos,0.0,0.0,9.28,15.62,0.09
-pagos_por_ciclo,Días con pago por ciclo esperado,0.0,1.0,0.97,0.78,-0.444
-deficit_relativo,1 - pago al canon / (cuota x ciclos),0.0,0.07,0.07,0.26,0.437
-justif_enfermedad,Eventos de justificación por enfermedad o calamidad,0.0,0.0,0.01,0.02,0.075
-justif_inmovilizacion,Eventos de justificación por inmovilización,0.0,0.0,0.01,0.07,0.129
-retencion_temporal,Eventos de moto ingresada (marca de gestión),0.0,0.0,0.02,0.1,0.151
-cliente_problema,Eventos de cliente problema (marca de gestión),0.0,0.0,0.03,0.02,-0.013
+ciclos_esperados,Cuotas que vencieron en la ventana,0.0,8.0,7.94,7.97,0.038
+prop_ciclos_atrasados,Proporción de ciclos con atraso >= 1 día,0.0,0.25,0.23,0.51,0.412
+prop_ciclos_atraso_3mas,Proporción de ciclos con atraso >= 3 días,0.0,0.0,0.07,0.28,0.442
+atraso_promedio,Días de atraso promedio por ciclo,0.0,0.38,0.8,3.92,0.457
+atraso_maximo,Máximo atraso de un ciclo,0.0,1.0,2.12,9.22,0.462
+ciclos_sin_pagar_k,Ciclos vencidos sin pagar en t_k,0.0,0.0,0.29,1.49,0.451
+dias_con_pago,Días con algún pago,0.0,8.0,7.69,6.5,-0.418
+dias_hasta_primer_pago,Días entre el inicio y el primer pago,2.9,5.0,5.04,5.36,0.028
+pago_canon_total,Abono + transferencia acumulados,0.0,1575.0,1573.88,1308.46,-0.372
+cv_pago_canon,Coeficiente de variación del pago al canon,3.3,0.13,0.14,0.18,0.145
+multa_acumulada,Multa acumulada,0.0,25.0,27.33,49.93,0.258
+prop_pagos_con_multa,Proporción de pagos con multa,2.9,0.12,0.18,0.34,0.303
+repuesto_acumulado,Dinero devuelto por préstamos,0.0,0.0,9.28,16.29,0.1
+pagos_por_ciclo,Días con pago por ciclo esperado,0.0,1.0,0.97,0.81,-0.425
+deficit_relativo,1 - pago al canon / (cuota x ciclos),0.0,0.07,0.07,0.23,0.419
+justif_enfermedad,Eventos de justificación por enfermedad o calamidad,0.0,0.0,0.01,0.02,0.078
+justif_inmovilizacion,Eventos de justificación por inmovilización,0.0,0.0,0.01,0.07,0.134
+retencion_temporal,Eventos de moto ingresada (marca de gestión),0.0,0.0,0.02,0.11,0.158
+cliente_problema,Eventos de cliente problema (marca de gestión),0.0,0.0,0.03,0.03,-0.01
 tipopago,Frecuencia de pago,0.0,,,,
 empresa,Empresa,0.0,,,,
-cuota,Valor de la cuota,0.0,220.0,213.36,214.34,-0.024
-no_canon,Cuotas pactadas,0.0,68.0,69.93,69.72,0.0
+cuota,Valor de la cuota,0.0,220.0,213.36,214.13,-0.034
+no_canon,Cuotas pactadas,0.0,68.0,69.93,69.88,0.01
 dia_canon,Día de vencimiento,0.0,,,,
