@@ -13,6 +13,8 @@ Ver docs/reglas_de_negocio.md.
 import numpy as np
 import pandas as pd
 
+from ciclos import CARTAS_RETIRO
+
 ENFERMEDAD = {"ENFERMO", "FAMILIAR MUERTO"}
 INMOVILIZACION = {"VARADO", "ACIDENTADO", "PATIO", "PATIOS", "FISCALIA", "EN TALLER", "GARANTIA", "GARANTÍA"}
 RETENCION = {"MOTO INGRESADA"}
@@ -27,6 +29,18 @@ def asignar_retiro(episodios, retiros, gracia_dias=30):
     m = m.sort_values("fecha").drop_duplicates("id_episodio")
     m = m.rename(columns={"fecha": "fecha_retiro", "motivo": "motivo_retiro"})
     return episodios.merge(m[["id_episodio", "fecha_retiro", "motivo_retiro"]], how="left")
+
+
+def _cierre_ambiguo(ep, ciclos, k, h, x):
+    """Episodios cerrados con algun ciclo del horizonte sin pagar y ninguno con x o mas
+    dias de atraso, que ademas no terminaron con una carta de retiro por mal comportamiento."""
+    c = _semana(ciclos[ciclos.id_episodio.isin(ep.id_episodio)], ep)
+    c = c[(c.semana > k) & (c.semana <= k + h)]
+    sin_pagar = (~c.pagado & c.cerrado).groupby(c.id_episodio).any()
+    grave = (c.dias_atraso >= x).groupby(c.id_episodio).any()
+    con_carta = ep.set_index("id_episodio").motivo_retiro.isin(CARTAS_RETIRO)
+    amb = sin_pagar & ~grave & ~con_carta.reindex(sin_pagar.index, fill_value=False)
+    return amb[amb].index
 
 
 def marcar_poblacion(episodios, ciclos, k, h, x, corte, inicio_cohorte):
@@ -49,6 +63,10 @@ def marcar_poblacion(episodios, ciclos, k, h, x, corte, inicio_cohorte):
         # El desenlace se conoce si el horizonte (mas x dias para ver el atraso del
         # ultimo ciclo) ya paso, o si el episodio se cerro dentro del horizonte
         ("sin desenlace observable aun", ~((t_h + pd.Timedelta(days=x) <= corte) | (ep.cerrado & (ep.fin <= t_h)))),
+        # Cerro con un ciclo del horizonte sin pagar, pero con menos de x dias de atraso
+        # y sin carta de retiro por mal comportamiento: el atraso quedo censurado y
+        # no hay evidencia de que haya sido grave (ni de que no lo fuera)
+        ("cierre con atraso censurado sin carta de retiro", ep.id_episodio.isin(_cierre_ambiguo(ep, ciclos, k, h, x))),
     ]
     ep["motivo_exclusion"] = None
     for motivo, cond in reglas:
@@ -64,10 +82,13 @@ def _semana(ciclos, episodios):
 
 def etiqueta(poblacion, ciclos, k, h, x):
     """1 = riesgo grave de mora: algun ciclo que vence en (k, k+h] semanas alcanza x o
-    mas dias de atraso, o nunca se pago porque el episodio se cerro."""
+    mas dias de atraso, o quedo sin pagar al cerrarse el episodio con una carta de retiro
+    por mal comportamiento. Los cierres sin carta y con atraso menor a x dias quedan fuera
+    de la poblacion (ver `marcar_poblacion`), porque su desenlace no es observable."""
     c = _semana(ciclos[ciclos.id_episodio.isin(poblacion.id_episodio)], poblacion)
     c = c[(c.semana > k) & (c.semana <= k + h)]
-    nunca_pagado = ~c.pagado & c.cerrado
+    con_carta = poblacion.set_index("id_episodio").motivo_retiro.isin(CARTAS_RETIRO)
+    nunca_pagado = ~c.pagado & c.cerrado & c.id_episodio.map(con_carta).fillna(False).astype(bool)
     c["grave"] = (c.dias_atraso >= x) | nunca_pagado
     y = c.groupby("id_episodio").grave.any()
     return y.reindex(poblacion.id_episodio, fill_value=False).astype(int).rename("y")

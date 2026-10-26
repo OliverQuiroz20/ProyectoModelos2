@@ -8,7 +8,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ciclos import ciclos_episodio, pagos_por_dia  # noqa: E402
-from variables import etiqueta, variables_entrada  # noqa: E402
+from variables import _cierre_ambiguo, etiqueta, variables_entrada  # noqa: E402
 
 CORTE = pd.Timestamp("2025-12-31")
 INICIO = pd.Timestamp("2025-01-06")  # lunes; canon los martes -> primer vencimiento 2025-01-07
@@ -73,9 +73,10 @@ def test_ciclo_sin_pago_queda_censurado_al_fin_del_episodio():
     assert c.dias_atraso.tolist() == [0, 6]
 
 
-def _poblacion_y_ciclos(fechas_pago, fin=CORTE, cerrado=False):
+def _poblacion_y_ciclos(fechas_pago, fin=CORTE, cerrado=False, motivo_retiro=None):
     ep = episodio(fin=fin, cerrado=cerrado)
     pob = ep.to_frame().T.astype({"fecha_inicio": "datetime64[ns]", "fin": "datetime64[ns]", "cuota": float})
+    pob["motivo_retiro"] = motivo_retiro
     return pob, ciclos(ep, fechas_pago)
 
 
@@ -86,11 +87,20 @@ def test_etiqueta_1_si_un_ciclo_del_horizonte_llega_a_x_dias():
     assert etiqueta(pob, c, k=8, h=12, x=14).iat[0] == 1
 
 
-def test_etiqueta_1_si_la_cuota_nunca_se_pago_y_el_episodio_se_cerro():
+def test_etiqueta_1_si_la_cuota_no_se_pago_y_cierra_con_carta_de_retiro():
     pagos = pd.date_range("2025-01-07", periods=8, freq="7D").tolist()
     # Se le quita la moto 5 dias despues de la cuota que no pago: nunca llega a 14 dias
-    pob, c = _poblacion_y_ciclos(pagos, fin=pd.Timestamp("2025-03-09"), cerrado=True)
+    pob, c = _poblacion_y_ciclos(pagos, fin=pd.Timestamp("2025-03-09"), cerrado=True,
+                                 motivo_retiro="CARTA REGRESO DIARIO")
     assert etiqueta(pob, c, k=8, h=12, x=14).iat[0] == 1
+    assert len(_cierre_ambiguo(pob, c, k=8, h=12, x=14)) == 0
+
+
+def test_cierre_sin_carta_y_con_atraso_menor_a_x_es_ambiguo_no_positivo():
+    pagos = pd.date_range("2025-01-07", periods=8, freq="7D").tolist()
+    pob, c = _poblacion_y_ciclos(pagos, fin=pd.Timestamp("2025-03-09"), cerrado=True)
+    assert etiqueta(pob, c, k=8, h=12, x=14).iat[0] == 0
+    assert list(_cierre_ambiguo(pob, c, k=8, h=12, x=14)) == list(pob.id_episodio)
 
 
 def test_etiqueta_0_si_paga_al_dia_todo_el_horizonte():
