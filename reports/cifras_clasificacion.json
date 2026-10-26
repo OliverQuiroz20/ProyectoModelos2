@@ -1,0 +1,706 @@
+{
+  "datos": {
+    "n": 2889,
+    "pos": 0.3551,
+    "corte": "2025-12-03",
+    "n_dev": 1735,
+    "n_prueba": 582
+  },
+  "modelos": {
+    "Regresión logística": {
+      "AUC validación": "0.805 ± 0.016",
+      "AUC (prueba)": 0.756,
+      "F1 (clase 0) (prueba)": 0.747,
+      "F1 (clase 1) (prueba)": 0.619,
+      "BACC (prueba)": 0.686,
+      "G-mean (prueba)": 0.684,
+      "MCC (prueba)": 0.367,
+      "umbral": 0.29
+    },
+    "Random Forest": {
+      "AUC validación": "0.798 ± 0.019",
+      "AUC (prueba)": 0.784,
+      "F1 (clase 0) (prueba)": 0.792,
+      "F1 (clase 1) (prueba)": 0.623,
+      "BACC (prueba)": 0.703,
+      "G-mean (prueba)": 0.691,
+      "MCC (prueba)": 0.421,
+      "umbral": 0.4
+    },
+    "Gradient Boosting": {
+      "AUC validación": "0.784 ± 0.022",
+      "AUC (prueba)": 0.783,
+      "F1 (clase 0) (prueba)": 0.783,
+      "F1 (clase 1) (prueba)": 0.611,
+      "BACC (prueba)": 0.693,
+      "G-mean (prueba)": 0.681,
+      "MCC (prueba)": 0.399,
+      "umbral": 0.21
+    },
+    "KNN": {
+      "AUC validación": "0.782 ± 0.020",
+      "AUC (prueba)": 0.701,
+      "F1 (clase 0) (prueba)": 0.767,
+      "F1 (clase 1) (prueba)": 0.591,
+      "BACC (prueba)": 0.676,
+      "G-mean (prueba)": 0.665,
+      "MCC (prueba)": 0.361,
+      "umbral": 0.32
+    },
+    "SVM (RBF)": {
+      "AUC validación": "0.781 ± 0.014",
+      "AUC (prueba)": 0.722,
+      "F1 (clase 0) (prueba)": 0.775,
+      "F1 (clase 1) (prueba)": 0.598,
+      "BACC (prueba)": 0.683,
+      "G-mean (prueba)": 0.671,
+      "MCC (prueba)": 0.378,
+      "umbral": 0.28
+    },
+    "Árbol de decisión": {
+      "AUC validación": "0.741 ± 0.040",
+      "AUC (prueba)": 0.759,
+      "F1 (clase 0) (prueba)": 0.797,
+      "F1 (clase 1) (prueba)": 0.52,
+      "BACC (prueba)": 0.657,
+      "G-mean (prueba)": 0.604,
+      "MCC (prueba)": 0.376,
+      "umbral": 0.41
+    }
+  },
+  "ablacion": [
+    {
+      "modelo": "Regresión logística",
+      "perfil": "sin",
+      "marcas": "con",
+      "AUC validación": 0.805,
+      "AUC prueba": 0.757,
+      "BACC prueba": 0.692,
+      "MCC prueba": 0.38
+    },
+    {
+      "modelo": "Regresión logística",
+      "perfil": "sin",
+      "marcas": "sin",
+      "AUC validación": 0.809,
+      "AUC prueba": 0.757,
+      "BACC prueba": 0.69,
+      "MCC prueba": 0.373
+    },
+    {
+      "modelo": "Regresión logística",
+      "perfil": "con",
+      "marcas": "con",
+      "AUC validación": 0.805,
+      "AUC prueba": 0.756,
+      "BACC prueba": 0.686,
+      "MCC prueba": 0.367
+    },
+    {
+      "modelo": "Regresión logística",
+      "perfil": "con",
+      "marcas": "sin",
+      "AUC validación": 0.809,
+      "AUC prueba": 0.756,
+      "BACC prueba": 0.691,
+      "MCC prueba": 0.376
+    },
+    {
+      "modelo": "Random Forest",
+      "perfil": "sin",
+      "marcas": "con",
+      "AUC validación": 0.797,
+      "AUC prueba": 0.786,
+      "BACC prueba": 0.706,
+      "MCC prueba": 0.42
+    },
+    {
+      "modelo": "Random Forest",
+      "perfil": "sin",
+      "marcas": "sin",
+      "AUC validación": 0.799,
+      "AUC prueba": 0.783,
+      "BACC prueba": 0.698,
+      "MCC prueba": 0.413
+    },
+    {
+      "modelo": "Random Forest",
+      "perfil": "con",
+      "marcas": "con",
+      "AUC validación": 0.798,
+      "AUC prueba": 0.784,
+      "BACC prueba": 0.703,
+      "MCC prueba": 0.421
+    },
+    {
+      "modelo": "Random Forest",
+      "perfil": "con",
+      "marcas": "sin",
+      "AUC validación": 0.798,
+      "AUC prueba": 0.786,
+      "BACC prueba": 0.703,
+      "MCC prueba": 0.419
+    },
+    {
+      "modelo": "Gradient Boosting",
+      "perfil": "sin",
+      "marcas": "con",
+      "AUC validación": 0.785,
+      "AUC prueba": 0.782,
+      "BACC prueba": 0.689,
+      "MCC prueba": 0.402
+    },
+    {
+      "modelo": "Gradient Boosting",
+      "perfil": "sin",
+      "marcas": "sin",
+      "AUC validación": 0.781,
+      "AUC prueba": 0.783,
+      "BACC prueba": 0.688,
+      "MCC prueba": 0.399
+    },
+    {
+      "modelo": "Gradient Boosting",
+      "perfil": "con",
+      "marcas": "con",
+      "AUC validación": 0.784,
+      "AUC prueba": 0.783,
+      "BACC prueba": 0.693,
+      "MCC prueba": 0.399
+    },
+    {
+      "modelo": "Gradient Boosting",
+      "perfil": "con",
+      "marcas": "sin",
+      "AUC validación": 0.784,
+      "AUC prueba": 0.783,
+      "BACC prueba": 0.681,
+      "MCC prueba": 0.378
+    }
+  ],
+  "balance": [
+    {
+      "modelo": "Regresión logística",
+      "balance": "ninguno",
+      "AUC validación": 0.804,
+      "AUC prueba": 0.756,
+      "F1 clase 1 (prueba)": 0.608,
+      "BACC prueba": 0.686,
+      "MCC prueba": 0.379
+    },
+    {
+      "modelo": "Regresión logística",
+      "balance": "ponderación",
+      "AUC validación": 0.805,
+      "AUC prueba": 0.756,
+      "F1 clase 1 (prueba)": 0.619,
+      "BACC prueba": 0.686,
+      "MCC prueba": 0.367
+    },
+    {
+      "modelo": "Regresión logística",
+      "balance": "submuestreo",
+      "AUC validación": 0.811,
+      "AUC prueba": 0.761,
+      "F1 clase 1 (prueba)": 0.623,
+      "BACC prueba": 0.686,
+      "MCC prueba": 0.366
+    },
+    {
+      "modelo": "Regresión logística",
+      "balance": "SMOTE",
+      "AUC validación": 0.803,
+      "AUC prueba": 0.744,
+      "F1 clase 1 (prueba)": 0.619,
+      "BACC prueba": 0.682,
+      "MCC prueba": 0.357
+    },
+    {
+      "modelo": "Random Forest",
+      "balance": "ninguno",
+      "AUC validación": 0.799,
+      "AUC prueba": 0.78,
+      "F1 clase 1 (prueba)": 0.632,
+      "BACC prueba": 0.706,
+      "MCC prueba": 0.422
+    },
+    {
+      "modelo": "Random Forest",
+      "balance": "ponderación",
+      "AUC validación": 0.798,
+      "AUC prueba": 0.784,
+      "F1 clase 1 (prueba)": 0.623,
+      "BACC prueba": 0.703,
+      "MCC prueba": 0.421
+    },
+    {
+      "modelo": "Random Forest",
+      "balance": "submuestreo",
+      "AUC validación": 0.797,
+      "AUC prueba": 0.792,
+      "F1 clase 1 (prueba)": 0.643,
+      "BACC prueba": 0.717,
+      "MCC prueba": 0.449
+    },
+    {
+      "modelo": "Random Forest",
+      "balance": "SMOTE",
+      "AUC validación": 0.804,
+      "AUC prueba": 0.78,
+      "F1 clase 1 (prueba)": 0.645,
+      "BACC prueba": 0.709,
+      "MCC prueba": 0.416
+    }
+  ],
+  "rejilla": [
+    {
+      "K": 4,
+      "H": 8,
+      "X": 7,
+      "episodios": 3645,
+      "% positivos": 39.0,
+      "n prueba": 734,
+      "AUC validación": 0.801,
+      "AUC prueba": 0.786,
+      "BACC prueba": 0.737,
+      "MCC prueba": 0.463
+    },
+    {
+      "K": 4,
+      "H": 8,
+      "X": 14,
+      "episodios": 3611,
+      "% positivos": 31.2,
+      "n prueba": 724,
+      "AUC validación": 0.831,
+      "AUC prueba": 0.799,
+      "BACC prueba": 0.759,
+      "MCC prueba": 0.514
+    },
+    {
+      "K": 4,
+      "H": 8,
+      "X": 21,
+      "episodios": 3556,
+      "% positivos": 28.8,
+      "n prueba": 714,
+      "AUC validación": 0.838,
+      "AUC prueba": 0.828,
+      "BACC prueba": 0.772,
+      "MCC prueba": 0.504
+    },
+    {
+      "K": 4,
+      "H": 12,
+      "X": 7,
+      "episodios": 3567,
+      "% positivos": 47.4,
+      "n prueba": 719,
+      "AUC validación": 0.78,
+      "AUC prueba": 0.737,
+      "BACC prueba": 0.686,
+      "MCC prueba": 0.375
+    },
+    {
+      "K": 4,
+      "H": 12,
+      "X": 14,
+      "episodios": 3523,
+      "% positivos": 38.1,
+      "n prueba": 708,
+      "AUC validación": 0.826,
+      "AUC prueba": 0.753,
+      "BACC prueba": 0.719,
+      "MCC prueba": 0.455
+    },
+    {
+      "K": 4,
+      "H": 12,
+      "X": 21,
+      "episodios": 3456,
+      "% positivos": 35.4,
+      "n prueba": 695,
+      "AUC validación": 0.826,
+      "AUC prueba": 0.773,
+      "BACC prueba": 0.728,
+      "MCC prueba": 0.472
+    },
+    {
+      "K": 4,
+      "H": 16,
+      "X": 7,
+      "episodios": 3462,
+      "% positivos": 53.8,
+      "n prueba": 701,
+      "AUC validación": 0.771,
+      "AUC prueba": 0.744,
+      "BACC prueba": 0.665,
+      "MCC prueba": 0.356
+    },
+    {
+      "K": 4,
+      "H": 16,
+      "X": 14,
+      "episodios": 3405,
+      "% positivos": 44.6,
+      "n prueba": 685,
+      "AUC validación": 0.806,
+      "AUC prueba": 0.739,
+      "BACC prueba": 0.658,
+      "MCC prueba": 0.362
+    },
+    {
+      "K": 4,
+      "H": 16,
+      "X": 21,
+      "episodios": 3348,
+      "% positivos": 41.5,
+      "n prueba": 672,
+      "AUC validación": 0.778,
+      "AUC prueba": 0.754,
+      "BACC prueba": 0.679,
+      "MCC prueba": 0.37
+    },
+    {
+      "K": 6,
+      "H": 8,
+      "X": 7,
+      "episodios": 3328,
+      "% positivos": 38.7,
+      "n prueba": 668,
+      "AUC validación": 0.792,
+      "AUC prueba": 0.792,
+      "BACC prueba": 0.734,
+      "MCC prueba": 0.467
+    },
+    {
+      "K": 6,
+      "H": 8,
+      "X": 14,
+      "episodios": 3264,
+      "% positivos": 29.1,
+      "n prueba": 657,
+      "AUC validación": 0.826,
+      "AUC prueba": 0.785,
+      "BACC prueba": 0.733,
+      "MCC prueba": 0.428
+    },
+    {
+      "K": 6,
+      "H": 8,
+      "X": 21,
+      "episodios": 3223,
+      "% positivos": 26.6,
+      "n prueba": 645,
+      "AUC validación": 0.828,
+      "AUC prueba": 0.793,
+      "BACC prueba": 0.731,
+      "MCC prueba": 0.429
+    },
+    {
+      "K": 6,
+      "H": 12,
+      "X": 7,
+      "episodios": 3228,
+      "% positivos": 46.7,
+      "n prueba": 652,
+      "AUC validación": 0.766,
+      "AUC prueba": 0.754,
+      "BACC prueba": 0.714,
+      "MCC prueba": 0.433
+    },
+    {
+      "K": 6,
+      "H": 12,
+      "X": 14,
+      "episodios": 3164,
+      "% positivos": 36.3,
+      "n prueba": 634,
+      "AUC validación": 0.796,
+      "AUC prueba": 0.75,
+      "BACC prueba": 0.677,
+      "MCC prueba": 0.37
+    },
+    {
+      "K": 6,
+      "H": 12,
+      "X": 21,
+      "episodios": 3115,
+      "% positivos": 33.2,
+      "n prueba": 625,
+      "AUC validación": 0.8,
+      "AUC prueba": 0.772,
+      "BACC prueba": 0.691,
+      "MCC prueba": 0.406
+    },
+    {
+      "K": 6,
+      "H": 16,
+      "X": 7,
+      "episodios": 3122,
+      "% positivos": 52.7,
+      "n prueba": 625,
+      "AUC validación": 0.752,
+      "AUC prueba": 0.783,
+      "BACC prueba": 0.728,
+      "MCC prueba": 0.456
+    },
+    {
+      "K": 6,
+      "H": 16,
+      "X": 14,
+      "episodios": 3067,
+      "% positivos": 42.1,
+      "n prueba": 616,
+      "AUC validación": 0.783,
+      "AUC prueba": 0.759,
+      "BACC prueba": 0.697,
+      "MCC prueba": 0.393
+    },
+    {
+      "K": 6,
+      "H": 16,
+      "X": 21,
+      "episodios": 3021,
+      "% positivos": 38.6,
+      "n prueba": 614,
+      "AUC validación": 0.778,
+      "AUC prueba": 0.771,
+      "BACC prueba": 0.704,
+      "MCC prueba": 0.421
+    },
+    {
+      "K": 8,
+      "H": 8,
+      "X": 7,
+      "episodios": 3048,
+      "% positivos": 38.6,
+      "n prueba": 610,
+      "AUC validación": 0.781,
+      "AUC prueba": 0.793,
+      "BACC prueba": 0.728,
+      "MCC prueba": 0.447
+    },
+    {
+      "K": 8,
+      "H": 8,
+      "X": 14,
+      "episodios": 3007,
+      "% positivos": 28.3,
+      "n prueba": 605,
+      "AUC validación": 0.802,
+      "AUC prueba": 0.767,
+      "BACC prueba": 0.706,
+      "MCC prueba": 0.378
+    },
+    {
+      "K": 8,
+      "H": 8,
+      "X": 21,
+      "episodios": 2962,
+      "% positivos": 25.4,
+      "n prueba": 594,
+      "AUC validación": 0.786,
+      "AUC prueba": 0.766,
+      "BACC prueba": 0.699,
+      "MCC prueba": 0.358
+    },
+    {
+      "K": 8,
+      "H": 12,
+      "X": 7,
+      "episodios": 2943,
+      "% positivos": 46.0,
+      "n prueba": 592,
+      "AUC validación": 0.775,
+      "AUC prueba": 0.775,
+      "BACC prueba": 0.709,
+      "MCC prueba": 0.432
+    },
+    {
+      "K": 8,
+      "H": 12,
+      "X": 14,
+      "episodios": 2889,
+      "% positivos": 35.5,
+      "n prueba": 582,
+      "AUC validación": 0.805,
+      "AUC prueba": 0.756,
+      "BACC prueba": 0.686,
+      "MCC prueba": 0.367
+    },
+    {
+      "K": 8,
+      "H": 12,
+      "X": 21,
+      "episodios": 2854,
+      "% positivos": 32.2,
+      "n prueba": 576,
+      "AUC validación": 0.79,
+      "AUC prueba": 0.758,
+      "BACC prueba": 0.704,
+      "MCC prueba": 0.393
+    },
+    {
+      "K": 8,
+      "H": 16,
+      "X": 7,
+      "episodios": 2850,
+      "% positivos": 51.8,
+      "n prueba": 581,
+      "AUC validación": 0.766,
+      "AUC prueba": 0.76,
+      "BACC prueba": 0.683,
+      "MCC prueba": 0.376
+    },
+    {
+      "K": 8,
+      "H": 16,
+      "X": 14,
+      "episodios": 2806,
+      "% positivos": 40.7,
+      "n prueba": 564,
+      "AUC validación": 0.789,
+      "AUC prueba": 0.748,
+      "BACC prueba": 0.68,
+      "MCC prueba": 0.364
+    },
+    {
+      "K": 8,
+      "H": 16,
+      "X": 21,
+      "episodios": 2776,
+      "% positivos": 36.2,
+      "n prueba": 565,
+      "AUC validación": 0.776,
+      "AUC prueba": 0.759,
+      "BACC prueba": 0.691,
+      "MCC prueba": 0.402
+    },
+    {
+      "K": 12,
+      "H": 8,
+      "X": 7,
+      "episodios": 2573,
+      "% positivos": 38.9,
+      "n prueba": 516,
+      "AUC validación": 0.806,
+      "AUC prueba": 0.85,
+      "BACC prueba": 0.733,
+      "MCC prueba": 0.539
+    },
+    {
+      "K": 12,
+      "H": 8,
+      "X": 14,
+      "episodios": 2530,
+      "% positivos": 27.9,
+      "n prueba": 508,
+      "AUC validación": 0.799,
+      "AUC prueba": 0.83,
+      "BACC prueba": 0.692,
+      "MCC prueba": 0.494
+    },
+    {
+      "K": 12,
+      "H": 8,
+      "X": 21,
+      "episodios": 2500,
+      "% positivos": 24.2,
+      "n prueba": 502,
+      "AUC validación": 0.802,
+      "AUC prueba": 0.824,
+      "BACC prueba": 0.72,
+      "MCC prueba": 0.489
+    },
+    {
+      "K": 12,
+      "H": 12,
+      "X": 7,
+      "episodios": 2480,
+      "% positivos": 45.8,
+      "n prueba": 501,
+      "AUC validación": 0.83,
+      "AUC prueba": 0.829,
+      "BACC prueba": 0.735,
+      "MCC prueba": 0.483
+    },
+    {
+      "K": 12,
+      "H": 12,
+      "X": 14,
+      "episodios": 2447,
+      "% positivos": 33.7,
+      "n prueba": 490,
+      "AUC validación": 0.817,
+      "AUC prueba": 0.806,
+      "BACC prueba": 0.723,
+      "MCC prueba": 0.457
+    },
+    {
+      "K": 12,
+      "H": 12,
+      "X": 21,
+      "episodios": 2422,
+      "% positivos": 28.7,
+      "n prueba": 493,
+      "AUC validación": 0.806,
+      "AUC prueba": 0.811,
+      "BACC prueba": 0.687,
+      "MCC prueba": 0.482
+    },
+    {
+      "K": 12,
+      "H": 16,
+      "X": 7,
+      "episodios": 2400,
+      "% positivos": 51.7,
+      "n prueba": 488,
+      "AUC validación": 0.811,
+      "AUC prueba": 0.84,
+      "BACC prueba": 0.708,
+      "MCC prueba": 0.439
+    },
+    {
+      "K": 12,
+      "H": 16,
+      "X": 14,
+      "episodios": 2376,
+      "% positivos": 39.9,
+      "n prueba": 483,
+      "AUC validación": 0.794,
+      "AUC prueba": 0.81,
+      "BACC prueba": 0.736,
+      "MCC prueba": 0.479
+    },
+    {
+      "K": 12,
+      "H": 16,
+      "X": 21,
+      "episodios": 2344,
+      "% positivos": 34.4,
+      "n prueba": 479,
+      "AUC validación": 0.778,
+      "AUC prueba": 0.804,
+      "BACC prueba": 0.714,
+      "MCC prueba": 0.469
+    }
+  ],
+  "modelo_final": {
+    "modelo": "Regresión logística",
+    "umbral": 0.2911700803158311,
+    "prueba": {
+      "AUC": 0.7562589480236539,
+      "F1 (clase 0)": 0.7467811158798283,
+      "F1 (clase 1)": 0.6193548387096774,
+      "BACC": 0.6855462184873949,
+      "G-mean": 0.6840315487343149,
+      "MCC": 0.36710372943424174,
+      "exactitud": 0.6958762886597938
+    },
+    "auc_ic95": [
+      0.716177813932829,
+      0.7938136185379896
+    ]
+  }
+}
