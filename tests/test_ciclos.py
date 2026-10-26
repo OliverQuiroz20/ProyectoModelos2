@@ -159,3 +159,25 @@ def test_pliegues_expansivos_respetan_el_orden_y_no_tocan_la_prueba_final():
         assert f.iloc[tr].max() < f.iloc[va].min()
         assert (fecha_resolucion(f.iloc[tr], 8, 12, 14) <= f.iloc[va].min()).all()
         assert (f.iloc[va] < corte).all()
+
+
+# --- Variables de gestion y justificaciones ---------------------------------
+
+from variables import variables_gestion  # noqa: E402
+
+
+def test_variables_de_gestion_no_ven_eventos_posteriores_a_k():
+    k = 8
+    t_k = INICIO + pd.Timedelta(weeks=k)
+    pob, _ = _poblacion_y_ciclos(pd.date_range("2025-01-07", t_k, freq="7D").tolist())
+    just_antes = pd.DataFrame({"id_contrato": ["C1"], "fecha": [INICIO + pd.Timedelta(days=10)],
+                               "justificacion": ["Multa"], "estado": ["APROBADO"], "concepto": ["NOPAGO"]})
+    gest_antes = pd.DataFrame({"id_contrato": ["C1"], "fecha": [INICIO + pd.Timedelta(days=12)], "concepto": ["SINCOMUNICACION"]})
+    # Eventos extra DESPUES de t_k (y uno antes de la fecha de inicio): no deben cambiar nada
+    just_despues = pd.concat([just_antes, just_antes.assign(fecha=t_k + pd.Timedelta(days=1)),
+                              just_antes.assign(fecha=INICIO - pd.Timedelta(days=5))], ignore_index=True)
+    gest_despues = pd.concat([gest_antes, gest_antes.assign(fecha=t_k + pd.Timedelta(days=2), concepto="PAGONEGRO")], ignore_index=True)
+    a = variables_gestion(pob, just_antes, gest_antes, k)
+    b = variables_gestion(pob, just_despues, gest_despues, k)
+    pd.testing.assert_frame_equal(a, b)
+    assert a.loc["E1", "just_multa"] == 1 and a.loc["E1", "gest_sin_comunicacion"] == 1

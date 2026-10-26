@@ -24,6 +24,10 @@ from variables import asignar_retiro, etiqueta, marcar_poblacion, variables_entr
 
 CAT = ["tipopago", "empresa", "dia_canon"]
 MARCAS = ["retencion_temporal", "cliente_problema"]  # marcas de gestion de la empresa
+TRAYECTORIA = [  # como termina la ventana de observacion (ver variables_entrada)
+    "atraso_ult2sem", "ciclos_sin_pagar_ult2sem", "atraso_ultimo_ciclo", "tendencia_atraso",
+    "desv_atraso", "cambio_atraso", "dias_desde_ultimo_pago", "max_dias_sin_pagar", "pago_canon_ult2sem",
+]
 NUM_BASE = [
     "ciclos_esperados", "prop_ciclos_atrasados", "prop_ciclos_atraso_3mas", "atraso_promedio",
     "ciclos_sin_pagar_k", "dias_hasta_primer_pago", "pago_canon_total", "cv_pago_canon",
@@ -47,11 +51,12 @@ class Preprocesador(BaseEstimator, TransformerMixin):
     """Imputa (mediana + indicador), aplica log con signo, estandariza, codifica las
     categoricas y, opcionalmente, agrega el perfil de pago (etapa 1) en one-hot."""
 
-    def __init__(self, con_perfil=False, con_marcas=True, k_perfil=4, seed=0):
+    def __init__(self, con_perfil=False, con_marcas=True, k_perfil=4, seed=0, con_trayectoria=False):
         self.con_perfil, self.con_marcas, self.k_perfil, self.seed = con_perfil, con_marcas, k_perfil, seed
+        self.con_trayectoria = con_trayectoria
 
     def fit(self, X, y=None):
-        self.num_ = NUM_BASE + (MARCAS if self.con_marcas else [])
+        self.num_ = NUM_BASE + (MARCAS if self.con_marcas else []) + (TRAYECTORIA if self.con_trayectoria else [])
         self.pipe_num_ = Pipeline([
             ("imp", SimpleImputer(strategy="median", add_indicator=True, keep_empty_features=True)),
             ("log", FunctionTransformer(_log_con_signo, validate=False)),
@@ -90,8 +95,9 @@ def modelos(seed=0, peso_clases=True):
     }
 
 
-def armar(clasificador, con_perfil=False, con_marcas=True, seed=0):
-    return Pipeline([("pre", Preprocesador(con_perfil, con_marcas, seed=seed)), ("clf", clone(clasificador))])
+def armar(clasificador, con_perfil=False, con_marcas=True, seed=0, con_trayectoria=False):
+    pre = Preprocesador(con_perfil, con_marcas, seed=seed, con_trayectoria=con_trayectoria)
+    return Pipeline([("pre", pre), ("clf", clone(clasificador))])
 
 
 def metricas(y, p, umbral):

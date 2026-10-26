@@ -103,6 +103,13 @@ def _eventos(diario_ep, valores):
     return salto.groupby(d.id_episodio).sum().astype(int)
 
 
+def _pendiente_atraso(d):
+    """Pendiente (dias de atraso por semana) del atraso de cada ciclo contra su semana."""
+    if len(d) < 3 or d.semana.nunique() < 2:
+        return np.nan
+    return np.polyfit(d.semana, d.atraso_k, 1)[0]
+
+
 def variables_entrada(poblacion, ciclos, pagos, diario, k):
     """Variables de comportamiento de las primeras k semanas de cada episodio."""
     pob = poblacion.set_index("id_episodio")
@@ -136,7 +143,25 @@ def variables_entrada(poblacion, ciclos, pagos, diario, k):
     tabla["multa_acumulada"] = gp.multa.sum()
     tabla["prop_pagos_con_multa"] = gp.multa.apply(lambda s: (s > 0).mean())
     tabla["repuesto_acumulado"] = gp.repuesto.sum()
+    # Trayectoria: como termina la ventana, no solo el promedio (todo con fecha <= t_k)
+    ult = c[c.semana > k - 2]
+    gu = ult.groupby("id_episodio")
+    tabla["atraso_ult2sem"] = gu.atraso_k.mean()
+    tabla["ciclos_sin_pagar_ult2sem"] = gu.pagado_k.apply(lambda s: (~s).sum())
+    ordenado = c.sort_values(["id_episodio", "fecha_esperada"])
+    tabla["atraso_ultimo_ciclo"] = ordenado.groupby("id_episodio").atraso_k.last()
+    tabla["tendencia_atraso"] = g.apply(_pendiente_atraso, include_groups=False)
+    tabla["desv_atraso"] = g.atraso_k.std()
+    mitad = c.semana > k / 2
+    tabla["cambio_atraso"] = c[mitad].groupby("id_episodio").atraso_k.mean() - c[~mitad].groupby("id_episodio").atraso_k.mean()
+    ult_pago = p.groupby("id_episodio").fecha.max()
+    tabla["dias_desde_ultimo_pago"] = (pob.index.to_series().map(t_k) - ult_pago.reindex(pob.index)).dt.days
+    huecos = p.sort_values(["id_episodio", "fecha"]).groupby("id_episodio").fecha.apply(lambda s: s.diff().dt.days.max())
+    tabla["max_dias_sin_pagar"] = huecos
+    p_ult = p[p.fecha > p.id_episodio.map(t_k) - pd.Timedelta(weeks=2)]
+    tabla["pago_canon_ult2sem"] = p_ult.groupby("id_episodio").canon.sum()
     tabla = tabla.reindex(pob.index)
+    tabla["pago_canon_ult2sem"] = tabla.pago_canon_ult2sem.fillna(0)
     for col in ("dias_con_pago", "pago_canon_total", "multa_acumulada", "repuesto_acumulado"):
         tabla[col] = tabla[col].fillna(0)  # sin pagos en la ventana: 0 real, no faltante
     tabla["pagos_por_ciclo"] = tabla.dias_con_pago / tabla.ciclos_esperados
@@ -158,3 +183,34 @@ def variables_entrada(poblacion, ciclos, pagos, diario, k):
     tabla["no_canon"] = pob.no_canon
     tabla["dia_canon"] = pob.dia_canon.str.upper().str[:3].where(pob.tipopago == "SEMANAL", "QUI")
     return tabla
+
+
+def variables_gestion(poblacion, justificaciones, gestion, k):
+    """Variables de la gestion de cobranza y de las justificaciones registradas en
+    [fecha_inicio, t_k]. Solo se cuentan eventos con fecha <= t_k. Los estados que la
+    empresa actualiza despues (aprobado/rechazado) se ignoran: se cuenta el evento, no su desenlace."""
+    pob = poblacion.set_index("id_episodio")
+    t_k = pob.fecha_inicio + pd.Timedelta(weeks=k)
+    base = poblacion[["id_episodio", "id_contrato", "fecha_inicio"]]
+    out = pd.DataFrame(index=pob.index)
+
+    j = justificaciones.assign(fecha=pd.to_datetime(justificaciones.fecha)).merge(base, on="id_contrato")
+    j = j[(j.fecha >= j.fecha_inicio) & (j.fecha <= j.id_episodio.map(t_k))]
+    j["concepto"] = j.concepto.fillna("").str.strip().str.upper()
+    out["just_registros"] = j.groupby("id_episodio").size()
+    out["just_nopago"] = j[j.concepto == "NOPAGO"].groupby("id_episodio").size()
+    out["just_incompleto"] = j[j.concepto == "INCOMPLETO"].groupby("id_episodio").size()
+    out["just_multa"] = j[j.justificacion.fillna("").str.strip().str.upper() == "MULTA"].groupby("id_episodio").size()
+
+    g = gestion.assign(fecha=pd.to_datetime(gestion.fecha)).merge(base, on="id_contrato")
+    g = g[(g.fecha >= g.fecha_inicio) & (g.fecha <= g.id_episodio.map(t_k))]
+    g["concepto"] = g.concepto.fillna("").str.strip().str.upper()
+    out["gest_eventos"] = g.groupby("id_episodio").size()
+    for nombre, valores in (
+        ("gest_sin_comunicacion", {"SINCOMUNICACION"}),
+        ("gest_pago_negro", {"PAGONEGRO", "EFECTIVO"}),
+        ("gest_justificada_2veces", {"JUSTIFI2VECES", "NOPAGOURGENTE", "INCUMPLIDO_SYS"}),
+        ("gest_cuotas_dobles", {"CUOTASDOBLES"}),
+    ):
+        out[nombre] = g[g.concepto.isin(valores)].groupby("id_episodio").size()
+    return out.reindex(pob.index).fillna(0)
