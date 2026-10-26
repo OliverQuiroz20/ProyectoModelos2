@@ -125,3 +125,37 @@ def test_variables_de_entrada_no_ven_informacion_posterior_a_k(cambio_posterior)
         pagos = pagos_por_dia(abonos(fechas))
         resultados.append(variables_entrada(pob, c, pagos, diario, k))
     pd.testing.assert_frame_equal(resultados[0], resultados[1])
+
+
+# --- Particion temporal ---------------------------------------------------
+
+from particion import dividir_temporal, fecha_resolucion, pliegues_expansivos  # noqa: E402
+
+
+def _fechas(n=200):
+    return pd.Series(pd.date_range("2024-04-01", periods=n, freq="5D"))
+
+
+def test_la_prueba_es_mas_reciente_que_el_entrenamiento():
+    f = _fechas()
+    corte = f.quantile(0.8)
+    tr, te = dividir_temporal(f, k=8, h=12, x=14, fecha_corte=corte)
+    assert f.iloc[tr].max() < f.iloc[te].min()
+
+
+def test_entrenamiento_no_usa_etiquetas_que_se_resuelven_despues_del_corte():
+    f = _fechas()
+    corte = f.quantile(0.8)
+    tr, _ = dividir_temporal(f, k=8, h=12, x=14, fecha_corte=corte)
+    assert (fecha_resolucion(f.iloc[tr], 8, 12, 14) <= corte).all()
+    # Hay una purga real: no todo lo anterior al corte entra a entrenamiento
+    assert len(tr) < (f < corte).sum()
+
+
+def test_pliegues_expansivos_respetan_el_orden_y_no_tocan_la_prueba_final():
+    f = _fechas()
+    corte = f.quantile(0.8)
+    for tr, va in pliegues_expansivos(f, 8, 12, 14, n_splits=4, fecha_max=corte):
+        assert f.iloc[tr].max() < f.iloc[va].min()
+        assert (fecha_resolucion(f.iloc[tr], 8, 12, 14) <= f.iloc[va].min()).all()
+        assert (f.iloc[va] < corte).all()
