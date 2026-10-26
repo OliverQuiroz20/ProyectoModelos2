@@ -41,42 +41,43 @@
   },
   "retiro_por_atraso_max": {
     "0": 16.5,
-    "1-2": 12.9,
-    "3-6": 28.1,
-    "7-13": 47.2,
+    "1-2": 13.2,
+    "3-6": 28.5,
+    "7-13": 49.1,
     "14-20": 66.5,
     "21-29": 66.3,
     "30-59": 70.4,
     "60+": 72.2
   },
   "embudo": {
-    "EN LA POBLACIÓN": 2933,
+    "EN LA POBLACIÓN": 2889,
     "cerrado antes de la semana k": 994,
     "inicio antes de la cohorte": 810,
     "sin desenlace observable aun": 336,
     "error de asignacion (<= 1 semana sin pagos)": 225,
+    "cierre con atraso censurado sin carta de retiro": 44,
     "sin dia_canon": 18
   },
   "etiqueta": {
-    "poblacion": 2933,
-    "positivos": 1070,
-    "pct_positivos": 36.5,
+    "poblacion": 2889,
+    "positivos": 1026,
+    "pct_positivos": 35.5,
     "positivos_por_atraso": 766,
-    "positivos_solo_nunca_pagado": 304,
+    "positivos_solo_nunca_pagado": 260,
     "de_esos_con_carta": 260,
-    "razon_negativos_positivos": 1.74
+    "razon_negativos_positivos": 1.82
   },
   "redundancia": {
     "prop_pagos_con_multa~prop_ciclos_atrasados": 0.841,
-    "multa_acumulada~atraso_promedio": 0.611,
-    "pagos_por_ciclo~dias_con_pago": 0.985,
-    "atraso_maximo~atraso_promedio": 0.974,
-    "deficit_relativo~ciclos_sin_pagar_k": 0.798
+    "multa_acumulada~atraso_promedio": 0.656,
+    "pagos_por_ciclo~dias_con_pago": 0.984,
+    "atraso_maximo~atraso_promedio": 0.973,
+    "deficit_relativo~ciclos_sin_pagar_k": 0.788
   },
   "faltantes": {
-    "dias_hasta_primer_pago": 126,
-    "cv_pago_canon": 136,
-    "prop_pagos_con_multa": 126
+    "dias_hasta_primer_pago": 84,
+    "cv_pago_canon": 94,
+    "prop_pagos_con_multa": 84
   },
   "parametros": {
     "K": 8,

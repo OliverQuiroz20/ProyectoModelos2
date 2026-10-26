@@ -1,0 +1,156 @@
+{
+  "particion": {
+    "corte": "2025-12-03",
+    "train": 1735,
+    "test": 582,
+    "purgados": 572,
+    "riesgo_train": 0.3205,
+    "riesgo_test": 0.3866
+  },
+  "seleccion_k": {
+    "2": {
+      "inercia": 10822.2024,
+      "silueta train": 0.5372,
+      "silueta validación": 0.4385,
+      "estabilidad (ARI)": 0.9865
+    },
+    "3": {
+      "inercia": 7248.6661,
+      "silueta train": 0.3698,
+      "silueta validación": 0.3591,
+      "estabilidad (ARI)": 0.8937
+    },
+    "4": {
+      "inercia": 6167.7888,
+      "silueta train": 0.329,
+      "silueta validación": 0.3256,
+      "estabilidad (ARI)": 0.8122
+    },
+    "5": {
+      "inercia": 5267.3901,
+      "silueta train": 0.3388,
+      "silueta validación": 0.3004,
+      "estabilidad (ARI)": 0.5686
+    },
+    "6": {
+      "inercia": 4700.9112,
+      "silueta train": 0.3231,
+      "silueta validación": 0.3032,
+      "estabilidad (ARI)": 0.6786
+    },
+    "7": {
+      "inercia": 4210.3504,
+      "silueta train": 0.3301,
+      "silueta validación": 0.303,
+      "estabilidad (ARI)": 0.7546
+    }
+  },
+  "comparacion_algoritmos": {
+    "k-means": {
+      "silueta train": 0.329,
+      "silueta prueba": 0.292,
+      "ARI vs k-means (train)": 1.0,
+      "riesgo por perfil, train (%)": "15 / 29 / 59 / 81",
+      "riesgo por perfil, prueba (%)": "19 / 37 / 74 / 73",
+      "tamaños, prueba": "232 / 210 / 125 / 15"
+    },
+    "jerárquico (Ward)": {
+      "silueta train": 0.2814,
+      "silueta prueba": 0.2682,
+      "ARI vs k-means (train)": 0.6964,
+      "riesgo por perfil, train (%)": "14 / 27 / 55 / 77",
+      "riesgo por perfil, prueba (%)": "18 / 34 / 71 / 77",
+      "tamaños, prueba": "236 / 177 / 156 / 13"
+    },
+    "GMM": {
+      "silueta train": 0.3036,
+      "silueta prueba": 0.2541,
+      "ARI vs k-means (train)": 0.6464,
+      "riesgo por perfil, train (%)": "13 / 32 / 56 / 77",
+      "riesgo por perfil, prueba (%)": "16 / 44 / 64 / nan",
+      "tamaños, prueba": "200 / 250 / 132 / 0"
+    }
+  },
+  "perfiles": {
+    "tabla": {
+      "0 · Puntual": {
+        "episodios (train)": 654,
+        "episodios (prueba)": 232,
+        "% riesgo grave (train)": 14.7,
+        "% riesgo grave (prueba)": 18.5
+      },
+      "1 · Atrasos leves": {
+        "episodios (train)": 670,
+        "episodios (prueba)": 210,
+        "% riesgo grave (train)": 29.0,
+        "% riesgo grave (prueba)": 37.1
+      },
+      "2 · Se va quedando": {
+        "episodios (train)": 300,
+        "episodios (prueba)": 125,
+        "% riesgo grave (train)": 58.7,
+        "% riesgo grave (prueba)": 74.4
+      },
+      "3 · No paga": {
+        "episodios (train)": 111,
+        "episodios (prueba)": 15,
+        "% riesgo grave (train)": 81.1,
+        "% riesgo grave (prueba)": 73.3
+      }
+    },
+    "medias": {
+      "0 · Puntual": {
+        "prop_ciclos_atrasados": 0.03,
+        "prop_ciclos_atraso_3mas": 0.01,
+        "atraso_promedio": 0.07,
+        "ciclos_sin_pagar_k": 0.06,
+        "pagos_por_ciclo": 1.0,
+        "deficit_relativo": 0.04,
+        "multa_acumulada": 0.05,
+        "prop_pagos_con_multa": 0.0,
+        "cv_pago_canon": 0.14,
+        "dias_hasta_primer_pago": 4.77
+      },
+      "1 · Atrasos leves": {
+        "prop_ciclos_atrasados": 0.31,
+        "prop_ciclos_atraso_3mas": 0.03,
+        "atraso_promedio": 0.47,
+        "ciclos_sin_pagar_k": 0.19,
+        "pagos_por_ciclo": 0.99,
+        "deficit_relativo": 0.07,
+        "multa_acumulada": 45.7,
+        "prop_pagos_con_multa": 0.29,
+        "cv_pago_canon": 0.16,
+        "dias_hasta_primer_pago": 4.74
+      },
+      "2 · Se va quedando": {
+        "prop_ciclos_atrasados": 0.71,
+        "prop_ciclos_atraso_3mas": 0.39,
+        "atraso_promedio": 3.08,
+        "ciclos_sin_pagar_k": 1.29,
+        "pagos_por_ciclo": 0.84,
+        "deficit_relativo": 0.2,
+        "multa_acumulada": 85.12,
+        "prop_pagos_con_multa": 0.54,
+        "cv_pago_canon": 0.18,
+        "dias_hasta_primer_pago": 5.49
+      },
+      "3 · No paga": {
+        "prop_ciclos_atrasados": 0.94,
+        "prop_ciclos_atraso_3mas": 0.86,
+        "atraso_promedio": 23.73,
+        "ciclos_sin_pagar_k": 7.32,
+        "pagos_por_ciclo": 0.08,
+        "deficit_relativo": 0.92,
+        "multa_acumulada": 2.12,
+        "prop_pagos_con_multa": 0.25,
+        "cv_pago_canon": 0.17,
+        "dias_hasta_primer_pago": 7.81
+      }
+    }
+  },
+  "pca_var_explicada": [
+    0.5195,
+    0.2171
+  ]
+}
