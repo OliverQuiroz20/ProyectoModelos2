@@ -39,10 +39,10 @@ son confidenciales; para ejecutarlo se usa Entorno de ejecución → Ejecutar to
 
 ![Arquitectura del modelo](docs/diagrama/arquitectura.png)
 
-Flujo completo, de la base de datos al ranking de gestión (generado con archify). La
-versión interactiva (con zoom, recorrido de rutas y tema claro/oscuro) es el archivo
-[`modelos2-architecture.html`](.archify/architecture-modelos2-20261029-210000/modelos2-architecture.html):
-en GitHub se abre como código, así que hay que descargarlo (botón *Download raw file*) y abrirlo en el navegador.
+Flujo completo, de la base de datos al ranking de gestión (generado con archify).
+
+**Versión interactiva** (zoom, recorrido de rutas, tema claro/oscuro): <https://oliverquiroz20.github.io/ProyectoModelos2/>
+(se publica con GitHub Pages desde la carpeta `docs/` de la rama `main`; el archivo es `docs/index.html`).
 
 ## Estructura
 
