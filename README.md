@@ -37,9 +37,12 @@ son confidenciales; para ejecutarlo se usa Entorno de ejecución → Ejecutar to
 
 ## Arquitectura
 
-Diagrama del flujo completo, de la base de datos al ranking de gestión (generado con
-archify): [`.archify/architecture-modelos2-20261029-210000/modelos2-architecture.html`](.archify/architecture-modelos2-20261029-210000/modelos2-architecture.html).
-Se descarga y se abre en el navegador.
+![Arquitectura del modelo](docs/diagrama/arquitectura.png)
+
+Flujo completo, de la base de datos al ranking de gestión (generado con archify). La
+versión interactiva (con zoom, recorrido de rutas y tema claro/oscuro) es el archivo
+[`modelos2-architecture.html`](.archify/architecture-modelos2-20261029-210000/modelos2-architecture.html):
+en GitHub se abre como código, así que hay que descargarlo (botón *Download raw file*) y abrirlo en el navegador.
 
 ## Estructura
 
