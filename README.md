@@ -12,11 +12,11 @@ variables y el perfil de la etapa 1 (aprendizaje supervisado).
 Este repositorio contiene el **Entregable I**: análisis exploratorio de la base real,
 definición de la variable objetivo y construcción de las variables candidatas.
 
-## Notebook en Colab
+## Cuaderno único en Colab (`Modelo_Riesgo_Mora_Colab.ipynb`)
 
-[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1t-ZZkSDWVyzutK3hZLlpr1nYyDcDGiS9)
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1I_msn1aacWz-Sf6tPA5YsytYaKnJZKSa)
 
-Enlace directo: <https://colab.research.google.com/drive/1t-ZZkSDWVyzutK3hZLlpr1nYyDcDGiS9>
+Enlace directo: <https://colab.research.google.com/drive/1I_msn1aacWz-Sf6tPA5YsytYaKnJZKSa>
 
 El enlace abre la versión del notebook que está en la carpeta compartida de Drive, junto
 con los datos. Solo funciona para las cuentas con acceso a esa carpeta, porque los datos
@@ -78,16 +78,16 @@ python -m pytest -q             # pruebas (no necesitan los datos reales)
 jupyter nbconvert --to notebook --execute --inplace notebooks/01_eda.ipynb
 ```
 
-**En Google Colab:** el equipo comparte por Drive (acceso restringido) la carpeta
-`ProyectoModelos2_Colab`, con el notebook, `ciclos.py`, `variables.py` y los tres
-archivos de `data/anon/`. Quien la recibe le agrega un acceso directo en "Mi unidad"
-(clic derecho → Organizar → Agregar acceso directo), abre `01_eda.ipynb` con Colab y
-ejecuta todo. El notebook conecta Drive y entra a la carpeta solo, y guarda los
-resultados en la sesión (`/content/salidas`), así que funciona con acceso de solo
-lectura. Esos resultados se borran al cerrar la sesión; hay que descargarlos si se
-necesitan.
+**En Google Colab:** el equipo comparte por Drive la carpeta `ProyectoModelos2_Colab`, con el cuaderno
+único `Modelo_Riesgo_Mora_Colab.ipynb`, los módulos `.py`, los `.csv.gz` anonimizados de `data/anon/` y
+`reports/` (resultados de la Parte 5). Quien la recibe le agrega un acceso directo en "Mi unidad"
+(clic derecho → Organizar → Agregar acceso directo), abre el cuaderno con Colab y usa
+Entorno de ejecución → Ejecutar todo. El cuaderno conecta Drive, verifica los archivos, corre las 5 partes
+(EDA, clustering, clasificación, selección/explicabilidad y mejoras) y termina con un control de calidad
+que compara los resultados con el informe. Guarda las salidas en la sesión (`/content/salidas`), así que
+funciona con acceso de solo lectura; se borran al cerrar la sesión.
 
-El notebook tarda alrededor de dos minutos. Sus parámetros (`K`, `H`, `X` e inicio de
+El cuaderno completo tarda entre 15 y 30 minutos (la rejilla K/H/X es lo más lento). Sus parámetros (`K`, `H`, `X` e inicio de
 la cohorte) están en la sección 1 y todo se recalcula al cambiarlos. Genera en
 `reports/` el diccionario de datos, la tabla de variables candidatas, las cifras
 clave (`cifras_eda.json`) y las figuras del documento.
