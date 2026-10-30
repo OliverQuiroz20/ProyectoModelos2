@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Modelo de riesgo de mora -- de la base al ranking de gestion",
+    "subtitle": "Dos etapas (perfiles de pago y clasificacion), validacion temporal sin fuga y un Colab unico que reproduce todo",
+    "output": ".archify/architecture-modelos2-20261029-210000/modelos2-architecture.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/OliverQuiroz20/ProyectoModelos2.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "8ff9c52570467134306c0854822f08622e02cfd2"
+    }
+  },
+  "components": [
+    { "id": "bd", "type": "database", "label": "MySQL db_packgps", "sublabel": "solo SELECT, via NetBird", "pos": [30, 60], "size": [210, 64], "sources": [{ "path": "src/conexion.py", "line": 19, "end_line": 33, "label": "motor / consultar" }] },
+    { "id": "extraer", "type": "backend", "label": "extraer.py", "sublabel": "contratos reales -> C00001", "pos": [30, 220], "size": [210, 64], "sources": [{ "path": "src/extraer.py", "line": 43, "end_line": 70, "label": "mapa_codigos / anonimizar" }] },
+    { "id": "anon", "type": "database", "label": "data/anon (csv.gz)", "sublabel": "abonos, motos_diario, rentabilidad", "pos": [30, 380], "size": [210, 64], "sources": [{ "path": "src/clasificacion.py", "line": 163, "label": "cargar_base" }] },
+
+    { "id": "ciclos", "type": "backend", "label": "ciclos.py", "sublabel": "episodios, calendario, pagos", "pos": [340, 60], "size": [210, 64], "sources": [{ "path": "src/ciclos.py", "line": 29, "end_line": 51, "label": "construir_episodios" }] },
+    { "id": "variables", "type": "backend", "label": "variables.py", "sublabel": "poblacion, etiqueta, 24 variables", "pos": [340, 220], "size": [210, 72], "sources": [{ "path": "src/variables.py", "line": 83, "end_line": 95, "label": "etiqueta" }, { "path": "src/variables.py", "line": 113, "label": "variables_entrada" }] },
+    { "id": "particion", "type": "backend", "label": "particion.py", "sublabel": "corte temporal + purga + pliegues", "pos": [340, 380], "size": [210, 64], "sources": [{ "path": "src/particion.py", "line": 23, "end_line": 33, "label": "dividir_temporal" }] },
+
+    { "id": "perfiles", "type": "backend", "label": "Etapa 1 · perfiles", "sublabel": "k-means K=4, sin usar la etiqueta", "pos": [650, 60], "size": [210, 64], "sources": [{ "path": "src/modelado.py", "line": 39, "label": "Perfil" }] },
+    { "id": "clasificacion", "type": "backend", "label": "Etapa 2 · clasificacion", "sublabel": "logistica, RF, GB; Pipeline por pliegue", "pos": [650, 220], "size": [210, 72], "sources": [{ "path": "src/clasificacion.py", "line": 50, "label": "Preprocesador" }, { "path": "src/clasificacion.py", "line": 127, "label": "evaluar" }] },
+    { "id": "seleccion", "type": "backend", "label": "Seleccion y SHAP", "sublabel": "filtro, MI, Lasso, PCA, UMAP", "pos": [650, 380], "size": [210, 64], "sources": [{ "path": "notebooks/04_seleccion_explicabilidad.ipynb", "line": 1, "label": "notebook 04" }] },
+
+    { "id": "reports", "type": "database", "label": "reports/", "sublabel": "cifras json, figuras, rejilla K/H/X", "pos": [960, 60], "size": [210, 64] },
+    { "id": "colab", "type": "frontend", "label": "Colab unico", "sublabel": "5 partes + control de calidad 9/9", "pos": [960, 220], "size": [210, 72], "sources": [{ "path": "README.md", "line": 15, "label": "enlace al Colab" }] },
+    { "id": "ranking", "type": "backend", "label": "Ranking de gestion", "sublabel": "motos activas, 8-20 semanas", "pos": [960, 380], "size": [210, 64] },
+
+    { "id": "equipo", "type": "external", "label": "Equipo y profe", "sublabel": "Ejecutar todo desde Drive", "pos": [1230, 220], "size": [190, 64] },
+    { "id": "cobranza", "type": "external", "label": "Cobranza", "sublabel": "lista local, nunca publicada", "pos": [1230, 380], "size": [190, 64] }
+  ],
+  "connections": [
+    { "id": "bd-extraer", "from": "bd", "to": "extraer", "label": "consulta" },
+    { "id": "extraer-anon", "from": "extraer", "to": "anon", "label": "anonimiza" },
+    { "id": "anon-ciclos", "from": "anon", "to": "ciclos", "label": "lee", "fromSide": "right", "toSide": "left" },
+    { "id": "ciclos-variables", "from": "ciclos", "to": "variables" },
+    { "id": "variables-particion", "from": "variables", "to": "particion", "label": "dataset" },
+    { "id": "particion-perfiles", "from": "particion", "to": "perfiles", "label": "entrenamiento", "fromSide": "right", "toSide": "left" },
+    { "id": "perfiles-clasif", "from": "perfiles", "to": "clasificacion", "label": "perfil" },
+    { "id": "particion-clasif", "from": "particion", "to": "clasificacion", "label": "prueba aparte", "variant": "emphasis" },
+    { "id": "clasif-seleccion", "from": "clasificacion", "to": "seleccion" },
+    { "id": "clasif-reports", "from": "clasificacion", "to": "reports", "label": "AUC, BACC, MCC", "fromSide": "right", "toSide": "left" },
+    { "id": "reports-colab", "from": "reports", "to": "colab", "label": "control de calidad" },
+    { "id": "colab-equipo", "from": "colab", "to": "equipo", "label": "reproduce" },
+    { "id": "bd-ranking", "from": "bd", "to": "ranking", "label": "estado de hoy", "variant": "dashed", "fromSide": "top", "toSide": "top" },
+    { "id": "clasif-ranking", "from": "clasificacion", "to": "ranking", "label": "puntua activos", "fromSide": "bottom", "toSide": "left" },
+    { "id": "ranking-cobranza", "from": "ranking", "to": "cobranza", "label": "top 10-20 %", "variant": "emphasis" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "Dos etapas, sin fuga entre ellas", "items": ["Etapa 1 agrupa perfiles de pago sin ver la etiqueta de riesgo", "Etapa 2 predice riesgo grave (cuota a 14 dias o mas en las semanas 9-20) con lo ocurrido en las primeras 8 semanas", "Escalado, imputacion, clustering y seleccion se reajustan dentro de cada pliegue"] },
+    { "dot": "cyan", "title": "Validacion temporal", "items": ["Los episodios antiguos entrenan y los recientes prueban; se purgan los que se resuelven despues del corte", "AUC de prueba 0,76-0,78; ninguna mejora supera el ruido, el techo viene de la informacion", "Validacion externa sin reajustar: Sincelejo 0,75-0,77, Monteria 0,78-0,81"] },
+    { "dot": "violet", "title": "Del modelo a la accion", "items": ["El ranking ordena motos activas de 8 a 20 semanas; el 10 % marcado acierta 66-78 %, frente a 47-54 % de las reglas por dias de atraso", "Quedan fuera las motos en realquiler, oficina, fiscalia, triage, geocerca y varadas", "La lista lleva contratos reales: vive solo en el equipo local"] }
+  ]
+}
